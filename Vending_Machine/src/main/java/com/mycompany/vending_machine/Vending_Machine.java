@@ -10,7 +10,10 @@ package com.mycompany.vending_machine;
  */
 public class Vending_Machine {
 
+    static External_Interface g;
+    
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        g = new External_Interface();
+        g.setVisible(true);
     }
 }

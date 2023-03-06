@@ -4,17 +4,52 @@
  */
 package com.mycompany.vending_machine;
 
+import java.util.Set;
+import java.util.HashSet;
+
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
- * @author seand
+ * @author Sean Johnson
  */
 public class External_Interface extends javax.swing.JFrame {
+        
+    private String[] labelA = {"A1", "A2", "A3", "A4", "A5", "A6"};
+    private int[] stockA = {10, 5, 3, 0, 0, 0};
+    private int[] priceA = {100, 100, 100, 100, 100, 100};
+    private String[] labelB = {"B1", "B2", "B3", "B4", "B5", "B6"};
+    private int[] stockB = {10, 3, 7, 0, 0, 0};
+    private int[] priceB = {120, 120, 120, 120, 120, 120};
+    private String[] labelC = {"C1", "C2", "C3", "C4", "C5", "C6"};
+    private int[] stockC = {10, 10, 10, 0, 0, 0};
+    private int[] priceC = {99, 99, 99, 99, 99, 99};
 
+    private DefaultTableModel products = new DefaultTableModel();
+
+    private Display currentDisplay = new Display();
+    private String currentInput = "";
+    private int credit = 0;
+
+    private double[][]coins = new double[][]{
+        {1.0, 0.01, 0.1},
+        {2.0, 0.02, 0.2},
+        {5.0, 0.05, 0.5},
+        {10.0, 0.10, 1.0},
+        {20.0, 0.20, 2.0},
+        {50.0, 0.50, 5.0},
+        {100.0, 1.00, 10.0},
+        {200.0, 2.00, 20.0}
+    };
+
+    
     /**
      * Creates new form External_Interface
      */
     public External_Interface() {
         initComponents();
+        this.updateTable();
+        updateDisplay();
     }
 
     /**
@@ -27,7 +62,7 @@ public class External_Interface extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblStock = new javax.swing.JTable();
         btnA = new javax.swing.JButton();
         btnB = new javax.swing.JButton();
         btnC = new javax.swing.JButton();
@@ -42,18 +77,18 @@ public class External_Interface extends javax.swing.JFrame {
         btn1p = new javax.swing.JButton();
         btn2p = new javax.swing.JButton();
         btn5p = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
+        btn10p = new javax.swing.JButton();
+        btn20p = new javax.swing.JButton();
+        btn50p = new javax.swing.JButton();
+        btn£1 = new javax.swing.JButton();
+        btn£2 = new javax.swing.JButton();
+        btnCustom = new javax.swing.JButton();
+        btnReturn = new javax.swing.JButton();
         btnScan = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblStock.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -64,7 +99,8 @@ public class External_Interface extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblStock.setShowGrid(true);
+        jScrollPane1.setViewportView(tblStock);
 
         btnA.setLabel("A");
         btnA.addActionListener(new java.awt.event.ActionListener() {
@@ -80,7 +116,7 @@ public class External_Interface extends javax.swing.JFrame {
             }
         });
 
-        btnC.setText("B");
+        btnC.setText("C");
         btnC.setActionCommand("C");
         btnC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -153,52 +189,52 @@ public class External_Interface extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("10p");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btn10p.setText("10p");
+        btn10p.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btn10pActionPerformed(evt);
             }
         });
 
-        jButton5.setText("20p");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        btn20p.setText("20p");
+        btn20p.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                btn20pActionPerformed(evt);
             }
         });
 
-        jButton6.setText("50p");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        btn50p.setText("50p");
+        btn50p.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                btn50pActionPerformed(evt);
             }
         });
 
-        jButton7.setText("£1");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        btn£1.setText("£1");
+        btn£1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                btn£1ActionPerformed(evt);
             }
         });
 
-        jButton8.setText("£2");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        btn£2.setText("£2");
+        btn£2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                btn£2ActionPerformed(evt);
             }
         });
 
-        jButton9.setText("custom");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        btnCustom.setText("custom");
+        btnCustom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                btnCustomActionPerformed(evt);
             }
         });
 
-        jButton10.setText("return credit");
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        btnReturn.setText("return credit");
+        btnReturn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                btnReturnActionPerformed(evt);
             }
         });
 
@@ -218,48 +254,49 @@ public class External_Interface extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnA, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnB, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnC, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnScan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCustom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btn1p)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btn5p)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton7))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton8))
-                    .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btn2p)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton6))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jButton10)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn10p)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn£2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn5p)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn£1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnA, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnB, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnC, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btn5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn1p)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn20p))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn2p)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn50p))
+                            .addComponent(btnReturn))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -284,28 +321,28 @@ public class External_Interface extends javax.swing.JFrame {
                             .addComponent(btnC, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(27, 27, 27)
-                        .addComponent(btnScan)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnScan)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn1p)
-                            .addComponent(jButton5))
+                            .addComponent(btn20p))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn2p)
-                            .addComponent(jButton6))
+                            .addComponent(btn50p))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn5p)
-                            .addComponent(jButton7))
+                            .addComponent(btn£1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton4)
-                            .addComponent(jButton8))
+                            .addComponent(btn10p)
+                            .addComponent(btn£2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton9)
+                        .addComponent(btnCustom)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton10))
+                        .addComponent(btnReturn))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -314,80 +351,118 @@ public class External_Interface extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAActionPerformed
-        // TODO add your handling code here:
+        
+        if (currentInput == "") {
+
+            currentInput += "A";
+            currentDisplay = new Display(currentInput);
+            updateDisplay();
+        }
+        else {
+
+            currentInput = "A";
+            currentDisplay = new Display(currentInput);
+            updateDisplay();
+        }
+
     }//GEN-LAST:event_btnAActionPerformed
 
     private void btnBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBActionPerformed
-        // TODO add your handling code here:
+        if (currentInput == "") {
+
+            currentInput += "B";
+            currentDisplay = new Display(currentInput);
+            updateDisplay();
+        }
+        else {
+
+            currentInput = "B";
+            currentDisplay = new Display(currentInput);
+            updateDisplay();
+        }
     }//GEN-LAST:event_btnBActionPerformed
 
     private void btnCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCActionPerformed
-        // TODO add your handling code here:
+        if (currentInput == "") {
+
+            currentInput += "C";
+            currentDisplay = new Display(currentInput);
+            updateDisplay();
+        }
+        else {
+
+            currentInput = "C";
+            currentDisplay = new Display(currentInput);
+            updateDisplay();
+        }
     }//GEN-LAST:event_btnCActionPerformed
 
     private void btn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn1ActionPerformed
-        // TODO add your handling code here:
+        numInput(1);
     }//GEN-LAST:event_btn1ActionPerformed
 
-    private void btn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn3ActionPerformed
-
     private void btn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn2ActionPerformed
-        // TODO add your handling code here:
+        numInput(2);
     }//GEN-LAST:event_btn2ActionPerformed
 
-    private void btn5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn5ActionPerformed
+    private void btn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn3ActionPerformed
+        numInput(3);
+    }//GEN-LAST:event_btn3ActionPerformed
 
     private void btn4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn4ActionPerformed
-        // TODO add your handling code here:
+        numInput(4);
     }//GEN-LAST:event_btn4ActionPerformed
 
+    private void btn5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn5ActionPerformed
+        numInput(5);
+    }//GEN-LAST:event_btn5ActionPerformed
+
     private void btn6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn6ActionPerformed
-        // TODO add your handling code here:
+        numInput(6);
     }//GEN-LAST:event_btn6ActionPerformed
 
     private void btn1pActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn1pActionPerformed
-        // TODO add your handling code here:
+        coinIn(0.01, 0.1);
     }//GEN-LAST:event_btn1pActionPerformed
 
     private void btn2pActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn2pActionPerformed
-        // TODO add your handling code here:
+        coinIn(0.02, 0.2);
     }//GEN-LAST:event_btn2pActionPerformed
 
     private void btn5pActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn5pActionPerformed
-        // TODO add your handling code here:
+        coinIn(0.05, 0.5);
     }//GEN-LAST:event_btn5pActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void btn10pActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn10pActionPerformed
+        coinIn(0.10, 1.0);
+    }//GEN-LAST:event_btn10pActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    private void btn20pActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn20pActionPerformed
+        coinIn(0.20, 2.0);
+    }//GEN-LAST:event_btn20pActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+    private void btn50pActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn50pActionPerformed
+        coinIn(0.50, 5.0);
+    }//GEN-LAST:event_btn50pActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
+    private void btn£1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn£1ActionPerformed
+        coinIn(1.00, 10.0);
+    }//GEN-LAST:event_btn£1ActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton8ActionPerformed
+    private void btn£2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn£2ActionPerformed
+        coinIn(2.00, 20.0);
+    }//GEN-LAST:event_btn£2ActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    private void btnCustomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton9ActionPerformed
+    }//GEN-LAST:event_btnCustomActionPerformed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton10ActionPerformed
+    private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
+        credit = 0;
+        currentInput = "";
+        currentDisplay = new Display();
+        updateDisplay();
+    }//GEN-LAST:event_btnReturnActionPerformed
 
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
         // TODO add your handling code here:
@@ -426,32 +501,141 @@ public class External_Interface extends javax.swing.JFrame {
                 new External_Interface().setVisible(true);
             }
         });
+        
+    }
+    
+    // Updates the jTable with new values
+    // Called when first opening and whenever stock changes
+    private void updateTable() {
+        
+
+        this.products = new DefaultTableModel();
+       
+        this.products.setColumnIdentifiers( new String[] {"1", "2", "3", "4", "5", "6"});
+
+            String[] newARow = new String[6];
+            String[] newBRow = new String[6];
+            String[] newCRow = new String[6];
+
+            for (int i = 0; i <= 5; i++) {
+                
+                newARow[i] = labelA[i] + " / " + Integer.toString(stockA[i]);
+                newBRow[i] = labelB[i] + " / " + Integer.toString(stockB[i]);
+                newCRow[i] = labelC[i] + " / " + Integer.toString(stockC[i]);
+
+            }
+
+            this.products.addRow(newARow);
+            this.products.addRow(newBRow);
+            this.products.addRow(newCRow);
+
+
+        tblStock.setModel(products);
+         
+    }
+
+    private void updateDisplay() {
+
+        textpDisplay.setText(currentDisplay.getMessage());
+
+    }
+
+    private void numInput(int input) {
+
+        if (currentInput.equals("A") || currentInput.equals("B") || currentInput.equals("C")) {
+            
+            currentInput += input;
+
+            stockPriceCheck();
+
+        }
+    }
+
+
+    private void coinIn(double mag, double size) {
+
+        boolean valid = false;
+        int value = 0;
+
+        for (int i = 0; i < coins.length; i++) {
+
+            if (coins[i][1] == mag && coins[i][2] == size){
+
+                valid = true;
+                value = (int) coins[i][0];
+
+            }
+
+        }
+
+        if (valid == true){
+            credit += value;
+        }
+
+        if (currentInput.length() < 2) {
+
+            currentDisplay = new Display(credit);
+            updateDisplay();
+
+        }
+        else {
+
+            stockPriceCheck();
+
+        }
+
+    }
+
+    private void stockPriceCheck() {
+
+        String rowChar = currentInput.substring(0, 1);
+
+        int colNum = Integer.parseInt(currentInput.substring(1)) - 1;
+
+        if (rowChar.equals("A")) {
+                
+            currentDisplay = new Display(currentInput, stockA[colNum], priceA[colNum], credit);
+            updateDisplay();
+
+        }
+        else if (rowChar.equals("B")) {
+                
+            currentDisplay = new Display(currentInput, stockB[colNum], priceB[colNum], credit);
+            updateDisplay();
+
+        }
+        else if (rowChar.equals("C")) {
+                
+            currentDisplay = new Display(currentInput, stockC[colNum], priceC[colNum], credit);
+            updateDisplay();
+        }
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn1;
+    private javax.swing.JButton btn10p;
     private javax.swing.JButton btn1p;
     private javax.swing.JButton btn2;
+    private javax.swing.JButton btn20p;
     private javax.swing.JButton btn2p;
     private javax.swing.JButton btn3;
     private javax.swing.JButton btn4;
     private javax.swing.JButton btn5;
+    private javax.swing.JButton btn50p;
     private javax.swing.JButton btn5p;
     private javax.swing.JButton btn6;
     private javax.swing.JButton btnA;
     private javax.swing.JButton btnB;
     private javax.swing.JButton btnC;
+    private javax.swing.JButton btnCustom;
+    private javax.swing.JButton btnReturn;
     private javax.swing.JButton btnScan;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
+    private javax.swing.JButton btn£1;
+    private javax.swing.JButton btn£2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblStock;
     private javax.swing.JTextPane textpDisplay;
     // End of variables declaration//GEN-END:variables
 }
