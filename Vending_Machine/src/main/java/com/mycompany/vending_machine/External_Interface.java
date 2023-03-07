@@ -7,6 +7,8 @@ package com.mycompany.vending_machine;
 import java.util.Set;
 import java.util.HashSet;
 
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -454,7 +456,7 @@ public class External_Interface extends javax.swing.JFrame {
     }//GEN-LAST:event_btn£2ActionPerformed
 
     private void btnCustomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomActionPerformed
-        // TODO add your handling code here:
+        coinIn(Double.parseDouble(JOptionPane.showInputDialog(this, "Input coin's magnetism value")), Double.parseDouble(JOptionPane.showInputDialog(this, "Input coin's size")));
     }//GEN-LAST:event_btnCustomActionPerformed
 
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
@@ -465,7 +467,54 @@ public class External_Interface extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReturnActionPerformed
 
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
-        // TODO add your handling code here:
+        
+        String rowChar = currentInput.substring(0, 1);
+
+        int colNum = Integer.parseInt(currentInput.substring(1)) - 1;
+        
+        if (credit == 0 && currentInput.length() == 2 && (rowChar.equals("A") || rowChar.equals("B") ||rowChar.equals("C")) ) {
+
+            if (rowChar.equals("A")) {
+                if (chargeCard(priceA[colNum])){
+
+                    credit += (int) priceA[colNum];
+
+                    buyDrink(rowChar, colNum, priceA[colNum]);
+
+                }
+                else {
+                    currentDisplay = new Display("Transaction Failed");
+                    updateDisplay();
+                }
+                if (rowChar.equals("B")) {
+                    if (chargeCard(priceB[colNum])){
+    
+                        credit += (int) priceB[colNum];
+    
+                        buyDrink(rowChar, colNum, priceB[colNum]);
+    
+                    }
+                    else {
+                        currentDisplay = new Display("Transaction Failed");
+                        updateDisplay();
+                    }
+                }
+                if (rowChar.equals("C")) {
+                    if (chargeCard(priceC[colNum])){
+    
+                        credit += (int) priceC[colNum];
+    
+                        buyDrink(rowChar, colNum, priceC[colNum]);
+    
+                    }
+                    else {
+                        currentDisplay = new Display("Transaction Failed");
+                        updateDisplay();
+                    }
+                }
+            }
+
+        }
     }//GEN-LAST:event_btnScanActionPerformed
 
     /**
@@ -551,7 +600,6 @@ public class External_Interface extends javax.swing.JFrame {
         }
     }
 
-
     private void coinIn(double mag, double size) {
 
         boolean valid = false;
@@ -570,6 +618,9 @@ public class External_Interface extends javax.swing.JFrame {
 
         if (valid == true){
             credit += value;
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "The coin is returned");
         }
 
         if (currentInput.length() < 2) {
@@ -594,21 +645,112 @@ public class External_Interface extends javax.swing.JFrame {
 
         if (rowChar.equals("A")) {
                 
-            currentDisplay = new Display(currentInput, stockA[colNum], priceA[colNum], credit);
-            updateDisplay();
+            if (priceA[colNum] - credit <= 0) {
+
+                buyDrink(rowChar, colNum, priceA[colNum]);
+
+            }
+            else{
+                currentDisplay = new Display(currentInput, stockA[colNum], priceA[colNum], credit);
+                updateDisplay();
+            }
 
         }
         else if (rowChar.equals("B")) {
-                
-            currentDisplay = new Display(currentInput, stockB[colNum], priceB[colNum], credit);
-            updateDisplay();
+              
+            if (priceB[colNum] - credit <= 0) {
+
+                buyDrink(rowChar, colNum, priceB[colNum]);
+
+            }
+            else{
+                currentDisplay = new Display(currentInput, stockB[colNum], priceB[colNum], credit);
+                updateDisplay();
+            }
 
         }
         else if (rowChar.equals("C")) {
                 
-            currentDisplay = new Display(currentInput, stockC[colNum], priceC[colNum], credit);
+            if (priceC[colNum] - credit <= 0) {
+
+                buyDrink(rowChar, colNum, priceC[colNum]);
+
+            }
+            else{
+                currentDisplay = new Display(currentInput, stockC[colNum], priceC[colNum], credit);
             updateDisplay();
+            }
         }
+
+    }
+
+    private void buyDrink(String rowChar, int colNum, double price) {
+
+        if (rowChar.equals("A")) {
+
+            credit -= (int) price;
+            stockA[colNum] -= 1;
+
+            if (credit > 0) {
+
+                dispenseChange();
+
+            }
+
+            JOptionPane.showMessageDialog(this, String.format("The machine dispenses a drink from %s", (rowChar + Integer.toString(colNum + 1))));
+
+            
+
+        }
+        else if(rowChar.equals("B")) {
+
+            credit -= (int) price;
+            stockB[colNum] -= 1;
+
+            if (credit > 0) {
+
+                dispenseChange();
+
+            }
+
+            JOptionPane.showMessageDialog(this, String.format("The machine dispenses a drink from %s", (rowChar + Integer.toString(colNum + 1))));
+
+        }
+        else if(rowChar.equals("C")) {
+
+            credit -= (int) price;
+            stockC[colNum] -= 1;
+
+            if (credit > 0) {
+
+                dispenseChange();
+
+            }
+
+            JOptionPane.showMessageDialog(this, String.format("The machine dispenses a drink from %s", (rowChar + Integer.toString(colNum + 1))));
+
+            
+
+        }
+
+        currentDisplay = new Display();
+        updateDisplay();
+        updateTable();
+
+    }
+
+    private void dispenseChange() {
+
+        JOptionPane.showMessageDialog(this, String.format("The machine dispenses %dp in change", credit));
+
+        credit = 0;
+    }
+
+    private boolean chargeCard(int price) {
+
+        //request payment from card server
+
+        return true;
 
     }
 
