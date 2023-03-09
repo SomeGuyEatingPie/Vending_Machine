@@ -746,9 +746,12 @@ public class External_Interface extends javax.swing.JFrame {
         credit = 0;
     }
 
+    /* code to request transaction from card server goes here.
+    10% discount is applied to value deducted from customer's account */
     private boolean chargeCard(int price) {
 
-        //request payment from card server
+        currentDisplay = new Display("10% discount applied");
+        updateDisplay();
 
         return true;
 
